@@ -1,8 +1,10 @@
 package nl.han.ica.datastructures;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
-public class HANLinkedList<T> implements IHANLinkedList<T> {
+public class HANLinkedList<T> implements IHANLinkedList<T>, Iterable<T>{
     private Node<T> head = null;
     private int size = 0;
 
@@ -105,5 +107,15 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
 
     private boolean isNodeIndex(int index) {
         return index >= 0 && index < size;
+    }
+
+    @Override
+    public Iterator iterator() {
+        return null;
+    }
+
+    @Override
+    public void forEach(Consumer action) {
+
     }
 }

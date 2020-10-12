@@ -1,14 +1,18 @@
 package nl.han.ica.icss.ast;
 
+import nl.han.ica.icss.ast.types.ExpressionType;
+
 import java.util.Objects;
 
 public class VariableReference extends Expression {
 
 	public String name;
+	private ExpressionType expressionType;
 	
 	public VariableReference(String name) {
 		super();
 		this.name = name;
+		this.expressionType = ExpressionType.UNDEFINED;
 	}
 
 	@Override
@@ -27,7 +31,11 @@ public class VariableReference extends Expression {
 
 	@Override
 	public int hashCode() {
-
 		return Objects.hash(name);
+	}
+
+	@Override
+	public boolean isOperable() {
+		return true;
 	}
 }

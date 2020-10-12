@@ -8,4 +8,9 @@ public class MultiplyOperation extends Operation {
     public String getNodeLabel() {
         return "Multiply";
     }
+
+    @Override
+    public boolean isValidOperation() {
+        return super.isValidOperation();
+    }
 }

@@ -8,4 +8,9 @@ public class AddOperation extends Operation {
     public String getNodeLabel() {
         return "Add";
     }
+
+    @Override
+    public boolean isValidOperation() {
+      return rhs.getExpressionType() == lhs.getExpressionType();
+    }
 }
