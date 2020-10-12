@@ -46,14 +46,17 @@ ASSIGNMENT_OPERATOR: ':=';
 
 //--- PARSER: ---
 stylesheet: variableAssignment* styleRule* EOF;
-styleRule: selector OPEN_BRACE declaration* CLOSE_BRACE;
+styleRule: selector OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE;
 
 selector: tagSelector | idSelector | classSelector;
 tagSelector: LOWER_IDENT;
 idSelector: ID_IDENT;
 classSelector: CLASS_IDENT;
 
-declaration: propertyName COLON expression+ SEMICOLON | ifClause | elseClause;
+declaration: propertyName COLON expression SEMICOLON;
+propertyName: LOWER_IDENT;
+
+variableAssignment: variableReference ASSIGNMENT_OPERATOR expression SEMICOLON;
 
 value: colorLiteral | pixelLiteral | percentageLiteral | boolLiteral | scalarLiteral | variableReference;
 colorLiteral: COLOR;
@@ -63,14 +66,10 @@ boolLiteral: TRUE | FALSE;
 scalarLiteral: SCALAR;
 variableReference: CAPITAL_IDENT;
 
-variableAssignment: variableReference ASSIGNMENT_OPERATOR expression+ SEMICOLON;
-propertyName: LOWER_IDENT;
-
-expression: value | expression multiply expression | expression subAdd expression;
-subAdd: plus | min;
+expression: value | expression multiply expression | expression (plus|min) expression;
 min: MIN;
 plus: PLUS;
 multiply: MUL;
 
-ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE declaration+ CLOSE_BRACE;
+ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE elseClause*;
 elseClause: ELSE OPEN_BRACE declaration+ CLOSE_BRACE;

@@ -123,12 +123,13 @@ public class ASTListener extends ICSSBaseListener {
     @Override
     public void exitColorLiteral(ICSSParser.ColorLiteralContext ctx) {
         ASTNode astNode = currentContainer.pop();
+        System.out.println(currentContainer.peek());
         currentContainer.peek().addChild(astNode);
     }
 
     @Override
     public void enterPixelLiteral(ICSSParser.PixelLiteralContext ctx) {
-        currentContainer.push(new PixelLiteral(ctx.getText()));
+         currentContainer.push(new PixelLiteral(ctx.getText()));
     }
 
     @Override
@@ -145,18 +146,18 @@ public class ASTListener extends ICSSBaseListener {
     @Override
     public void exitPercentageLiteral(ICSSParser.PercentageLiteralContext ctx) {
         ASTNode astNode = currentContainer.pop();
-        currentContainer.peek().addChild(astNode);
+         currentContainer.peek().addChild(astNode);
     }
 
     @Override
     public void enterBoolLiteral(ICSSParser.BoolLiteralContext ctx) {
-        currentContainer.push(new BoolLiteral(ctx.getText()));
+         currentContainer.push(new BoolLiteral(ctx.getText()));
     }
 
     @Override
     public void exitBoolLiteral(ICSSParser.BoolLiteralContext ctx) {
-        ASTNode astNode = currentContainer.pop();
-        currentContainer.peek().addChild(astNode);
+         ASTNode astNode = currentContainer.pop();
+         currentContainer.peek().addChild(astNode);
     }
 
     @Override
@@ -194,35 +195,31 @@ public class ASTListener extends ICSSBaseListener {
 
     @Override
     public void enterPlus(ICSSParser.PlusContext ctx) {
-        currentContainer.push(new AddOperation());
+
     }
 
     @Override
     public void exitPlus(ICSSParser.PlusContext ctx) {
-        ASTNode astNode = currentContainer.pop();
-        currentContainer.peek().addChild(astNode);
+
     }
 
     @Override
     public void enterMin(ICSSParser.MinContext ctx) {
-        currentContainer.push(new SubtractOperation());
     }
 
     @Override
     public void exitMin(ICSSParser.MinContext ctx) {
-        ASTNode astNode = currentContainer.pop();
-        currentContainer.peek().addChild(astNode);
+
     }
 
     @Override
     public void enterMultiply(ICSSParser.MultiplyContext ctx) {
-        currentContainer.push(new MultiplyOperation());
+
     }
 
     @Override
     public void exitMultiply(ICSSParser.MultiplyContext ctx) {
-        ASTNode astNode = currentContainer.pop();
-        currentContainer.peek().addChild(astNode);
+
     }
 
     @Override
@@ -238,81 +235,49 @@ public class ASTListener extends ICSSBaseListener {
 
     @Override
     public void enterExpression(ICSSParser.ExpressionContext ctx) {
-
-
+        Expression expression = null;
+        if (ctx.getChildCount() == 3) {
+            if (ctx.getChild(1).getText().equals("*")) {
+                expression = new MultiplyOperation();
+            }
+            if (ctx.getChild(1).getText().equals("+")) {
+                expression = new AddOperation();
+            }
+            if (ctx.getChild(1).getText().equals("-")) {
+                expression = new SubtractOperation();
+            }
+            currentContainer.push(expression);
+        }
     }
 
     @Override
     public void exitExpression(ICSSParser.ExpressionContext ctx) {
-        Expression expression;
-        if (ctx.getChildCount() == 1) {
-
-            String classname = ctx.children.get(0).getChild(0).getClass().getSimpleName();
-
-            switch (classname) {
-                case "BoolLiteralContext":
-                    expression = new BoolLiteral(ctx.getChild(0).getText());
-                    break;
-                case "ColorLiteralContext":
-                    expression = new ColorLiteral(ctx.getChild(0).getText());
-                    break;
-                case "PixelLiteralContext":
-                    expression = new PixelLiteral(ctx.getChild(0).getText());
-                    break;
-                case "VariableReferenceContext":
-                    expression = new VariableReference(ctx.getChild(0).getText());
-                    break;
-                case "ScalarLiteralContext":
-                    expression = new ScalarLiteral(ctx.getChild(0).getText());
-                    break;
-                case "PercentageLiteralContext":
-                    expression = new PercentageLiteral(ctx.getChild(0).getText());
-                    break;
-                default:
-                    expression = null;
-            }
-            currentContainer.push(expression);
+        if (ctx.plus() != null | ctx.min() != null | ctx.multiply() != null) {
+            ASTNode operation = currentContainer.pop();
+            currentContainer.peek().addChild(operation);
         }
-
-        if (ctx.getChildCount() == 3) {
-
-            char operator = ctx.getChild(1).getText().charAt(0);
-            switch (operator) {
-                case '+':
-                    expression = new AddOperation();
-                    break;
-                case '*':
-                    expression = new MultiplyOperation();
-                default:
-                    expression = new SubtractOperation();
-            }
-            expression.addChild(currentContainer.pop());
-            expression.addChild(currentContainer.pop());
-            currentContainer.push(expression);
-
-        }
-
-
     }
 
 
     @Override
     public void enterIfClause(ICSSParser.IfClauseContext ctx) {
-        super.enterIfClause(ctx);
+        currentContainer.push(new IfClause());
     }
 
     @Override
     public void exitIfClause(ICSSParser.IfClauseContext ctx) {
-        super.exitIfClause(ctx);
+        ASTNode astNode = currentContainer.pop();
+        currentContainer.peek().addChild(astNode);
     }
 
     @Override
     public void enterElseClause(ICSSParser.ElseClauseContext ctx) {
-        super.enterElseClause(ctx);
+        currentContainer.push(new ElseClause());
     }
 
     @Override
     public void exitElseClause(ICSSParser.ElseClauseContext ctx) {
-        super.exitElseClause(ctx);
+        ASTNode astNode = currentContainer.pop();
+        currentContainer.peek().addChild(astNode);
     }
 }
