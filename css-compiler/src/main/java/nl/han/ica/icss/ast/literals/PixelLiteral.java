@@ -40,4 +40,9 @@ public class PixelLiteral extends Literal {
         return ExpressionType.PIXEL;
     }
 
+    @Override
+    public boolean isOperable() {
+        return true;
+    }
+
 }

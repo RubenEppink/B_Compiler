@@ -13,11 +13,25 @@ public abstract class Checkers {
         return false;
     }
 
+    /**
+     * Checks if the current expression is an operation
+     * @return true if current expression is an operation
+     */
+    public boolean isOperation() {
+        return false;
+    }
+
+    /**
+     * Checks if the expressions on either side
+     * of an operation are compatible
+     * @return true if expressions are compatible
+     */
     public boolean isValidOperation() {
         return false;
     }
 
+
     public ExpressionType getExpressionType() {
-        return ExpressionType.INVALID;
+        return ExpressionType.UNDEFINED;
     }
 }

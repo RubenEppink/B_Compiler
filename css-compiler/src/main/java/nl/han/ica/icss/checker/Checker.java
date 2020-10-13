@@ -20,6 +20,7 @@ import static nl.han.ica.icss.ast.types.ExpressionType.*;
 
 public class Checker {
 
+    private boolean expressionError;
     private List<HashMap<String, ExpressionType>> variableTypes;
 
     public void check(AST ast) {
@@ -32,7 +33,7 @@ public class Checker {
             if (child instanceof VariableAssignment) {
                 checkVariableAssignment((VariableAssignment) child);
             } else if (child instanceof Stylerule) {
-                checkStyleRule((Stylerule) child);
+                //checkStyleRule((Stylerule) child);
             }
         });
     }
@@ -40,9 +41,9 @@ public class Checker {
     private void checkStyleRule(Stylerule stylerule) {
         stylerule.getChildren().forEach(child -> {
             if (child instanceof Declaration) {
-                checkDeclaration((Declaration) child);
+                // checkDeclaration((Declaration) child);
             } else if (child instanceof IfClause) {
-                checkIfClause((IfClause) child);
+                // checkIfClause((IfClause) child);
             }
         });
     }
@@ -51,17 +52,28 @@ public class Checker {
         Expression expression = variableAssignment.expression;
 
         if (expression instanceof Operation) {
+            expressionError = false;
             checkOperation((Operation) expression);
         } else if (expression instanceof Literal) {
-            checkLiteral(variableAssignment);
+            // checkLiteral(variableAssignment);
         }
     }
 
     private void checkOperation(Operation operation) {
-        if (operation.rhs.isOperable() && operation.rhs.isOperable() && operation.isValidOperation()) {
+        if (operation.rhs.isOperation()) {
+            checkOperation((Operation) operation.rhs);
+        } else if (operation.lhs.isOperation()) {
+            checkOperation((Operation) operation.lhs);
+        }
 
+        if (expressionError) return;
 
+        if (!operation.rhs.isOperable() || !operation.lhs.isOperable()) {
+            operation.setError("You can't use Color or Boolean in an expression");
+            expressionError = true;
+        } else if (!operation.isValidOperation()) {
+            operation.setError(operation.lhs.getExpressionType().name() + " and " + operation.rhs.getExpressionType() + " aren't allowed with this operator");
+            expressionError = true;
         }
     }
-
 }

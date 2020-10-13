@@ -11,6 +11,11 @@ public class SubtractOperation extends Operation {
 
     @Override
     public boolean isValidOperation() {
-        return super.isValidOperation();
+        if (this.rhs.getExpressionType() == this.lhs.getExpressionType()) {
+            this.isOperable = true;
+            this.expressionType = rhs.getExpressionType();
+            return true;
+        }
+        return false;
     }
 }
