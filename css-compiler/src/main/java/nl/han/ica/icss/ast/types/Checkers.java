@@ -31,6 +31,10 @@ public abstract class Checkers {
     }
 
 
+    /**
+     *
+     * @return Enum containing the expression type
+     */
     public ExpressionType getExpressionType() {
         return ExpressionType.UNDEFINED;
     }

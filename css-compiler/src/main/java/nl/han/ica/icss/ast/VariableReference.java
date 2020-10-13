@@ -1,13 +1,14 @@
 package nl.han.ica.icss.ast;
 
 import nl.han.ica.icss.ast.types.ExpressionType;
+import nl.han.ica.icss.checker.Checker;
 
 import java.util.Objects;
 
 public class VariableReference extends Expression {
 
 	public String name;
-	private ExpressionType expressionType;
+	public ExpressionType expressionType;
 	
 	public VariableReference(String name) {
 		super();
@@ -37,5 +38,10 @@ public class VariableReference extends Expression {
 	@Override
 	public boolean isOperable() {
 		return true;
+	}
+
+	@Override
+	public ExpressionType getExpressionType() {
+		return Checker.variableTypes.stream().filter(hashmap -> hashmap.containsKey(name)).findFirst().get().get(name);
 	}
 }

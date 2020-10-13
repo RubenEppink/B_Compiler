@@ -21,7 +21,7 @@ import static nl.han.ica.icss.ast.types.ExpressionType.*;
 public class Checker {
 
     private boolean expressionError;
-    private List<HashMap<String, ExpressionType>> variableTypes;
+    public static List<HashMap<String, ExpressionType>> variableTypes;
 
     public void check(AST ast) {
         variableTypes = new LinkedList<>();
@@ -33,7 +33,7 @@ public class Checker {
             if (child instanceof VariableAssignment) {
                 checkVariableAssignment((VariableAssignment) child);
             } else if (child instanceof Stylerule) {
-                //checkStyleRule((Stylerule) child);
+                checkStyleRule((Stylerule) child);
             }
         });
     }
@@ -41,11 +41,24 @@ public class Checker {
     private void checkStyleRule(Stylerule stylerule) {
         stylerule.getChildren().forEach(child -> {
             if (child instanceof Declaration) {
-                // checkDeclaration((Declaration) child);
+                checkDeclaration((Declaration) child);
             } else if (child instanceof IfClause) {
                 // checkIfClause((IfClause) child);
             }
         });
+    }
+
+    private void checkDeclaration(Declaration declaration) {
+        ExpressionType expressionType;
+
+        if (declaration.expression.isOperation()) {
+            checkOperation((Operation) declaration.expression);
+        }
+        expressionType = declaration.expression.getExpressionType();
+
+        switch (declaration.property.name) {
+        }
+
     }
 
     private void checkVariableAssignment(VariableAssignment variableAssignment) {
@@ -54,10 +67,17 @@ public class Checker {
         if (expression instanceof Operation) {
             expressionError = false;
             checkOperation((Operation) expression);
-        } else if (expression instanceof Literal) {
-            // checkLiteral(variableAssignment);
         }
+
+        addVariableReferenceToList(variableAssignment.name.name, expression.getExpressionType());
     }
+
+    private void addVariableReferenceToList(String name, ExpressionType expressionType) {
+        HashMap<String, ExpressionType> variableWithType = new HashMap<>();
+        variableWithType.put(name, expressionType);
+        variableTypes.add(variableWithType);
+    }
+
 
     private void checkOperation(Operation operation) {
         if (operation.rhs.isOperation()) {
@@ -66,13 +86,14 @@ public class Checker {
             checkOperation((Operation) operation.lhs);
         }
 
+
         if (expressionError) return;
 
         if (!operation.rhs.isOperable() || !operation.lhs.isOperable()) {
             operation.setError("You can't use Color or Boolean in an expression");
             expressionError = true;
         } else if (!operation.isValidOperation()) {
-            operation.setError(operation.lhs.getExpressionType().name() + " and " + operation.rhs.getExpressionType() + " aren't allowed with this operator");
+            operation.setError(operation.lhs.getExpressionType() + " and " + operation.rhs.getExpressionType() + " aren't allowed with this operator");
             expressionError = true;
         }
     }
