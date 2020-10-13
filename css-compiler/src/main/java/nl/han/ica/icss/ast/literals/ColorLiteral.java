@@ -32,6 +32,6 @@ public class ColorLiteral extends Literal {
 
     @Override
     public ExpressionType getExpressionType() {
-        return ExpressionType.PERCENTAGE;
+        return ExpressionType.COLOR;
     }
 }

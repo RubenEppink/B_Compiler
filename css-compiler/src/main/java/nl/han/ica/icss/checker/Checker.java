@@ -43,8 +43,36 @@ public class Checker {
             if (child instanceof Declaration) {
                 checkDeclaration((Declaration) child);
             } else if (child instanceof IfClause) {
-                // checkIfClause((IfClause) child);
+                checkIfClause((IfClause) child);
             }
+        });
+    }
+
+    private void checkIfClause(IfClause ifClause) {
+        if (ifClause.conditionalExpression.getExpressionType() != BOOL) {
+            ifClause.setError("Conditional expression has to be a boolean");
+        }
+
+        ifClause.getChildren().forEach(child -> {
+                    if (child instanceof IfClause) {
+                        checkIfClause((IfClause) child);
+                    } else if (child instanceof Declaration) {
+                        checkDeclaration((Declaration) child);
+                    } else if (child instanceof ElseClause) {
+                        checkElseClause((ElseClause) child);
+                    }
+                }
+        );
+
+
+    }
+
+    private void checkElseClause(ElseClause elseClause) {
+        elseClause.body.forEach(child -> {
+            if (child instanceof Declaration) {
+                checkDeclaration((Declaration) child);
+            }
+
         });
     }
 
@@ -53,12 +81,24 @@ public class Checker {
 
         if (declaration.expression.isOperation()) {
             checkOperation((Operation) declaration.expression);
+
         }
         expressionType = declaration.expression.getExpressionType();
 
         switch (declaration.property.name) {
+            case "color":
+            case "background-color":
+                if (expressionType != COLOR) {
+                    declaration.setError(expressionType + " isn't compatible with the a color property");
+                }
+                break;
+            case "width":
+            case "height":
+                if (expressionType != PIXEL && expressionType != PERCENTAGE) {
+                    declaration.setError(expressionType + " isn't compatible with a size property");
+                }
+                break;
         }
-
     }
 
     private void checkVariableAssignment(VariableAssignment variableAssignment) {
