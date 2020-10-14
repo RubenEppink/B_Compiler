@@ -1,19 +1,11 @@
 package nl.han.ica.icss.checker;
 
-import nl.han.ica.datastructures.HANLinkedList;
-import nl.han.ica.datastructures.IHANLinkedList;
+
 import nl.han.ica.icss.ast.*;
-import nl.han.ica.icss.ast.literals.BoolLiteral;
-import nl.han.ica.icss.ast.literals.ColorLiteral;
-import nl.han.ica.icss.ast.operations.AddOperation;
-import nl.han.ica.icss.ast.operations.MultiplyOperation;
-import nl.han.ica.icss.ast.operations.SubtractOperation;
+
 import nl.han.ica.icss.ast.types.ExpressionType;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static nl.han.ica.icss.ast.types.ExpressionType.*;
 
@@ -21,7 +13,7 @@ import static nl.han.ica.icss.ast.types.ExpressionType.*;
 public class Checker {
 
     private boolean expressionError;
-    public static List<HashMap<String, ExpressionType>> variableTypes;
+    public static LinkedList<HashMap<String, ExpressionType>> variableTypes;
 
     public void check(AST ast) {
         variableTypes = new LinkedList<>();
@@ -29,6 +21,9 @@ public class Checker {
     }
 
     private void checkStyleSheet(Stylesheet stylesheet) {
+        HashMap<String, ExpressionType> hashmap = new HashMap<>();
+        addScopeToVariableTypes(hashmap);
+
         stylesheet.getChildren().forEach(child -> {
             if (child instanceof VariableAssignment) {
                 checkVariableAssignment((VariableAssignment) child);
@@ -36,19 +31,40 @@ public class Checker {
                 checkStyleRule((Stylerule) child);
             }
         });
+
+        removeScopeFromVariableTypes(hashmap);
+    }
+
+    private void removeScopeFromVariableTypes(HashMap<String, ExpressionType> hashmap) {
+        variableTypes.remove(hashmap);
+    }
+
+    private void addScopeToVariableTypes(HashMap<String, ExpressionType> hashmap) {
+        variableTypes.add(hashmap);
     }
 
     private void checkStyleRule(Stylerule stylerule) {
+        HashMap<String, ExpressionType> hashmap = new HashMap<>();
+        addScopeToVariableTypes(hashmap);
+
         stylerule.getChildren().forEach(child -> {
             if (child instanceof Declaration) {
                 checkDeclaration((Declaration) child);
             } else if (child instanceof IfClause) {
                 checkIfClause((IfClause) child);
+            } else if (child instanceof VariableAssignment) {
+                checkVariableAssignment((VariableAssignment) child);
+
             }
         });
+        removeScopeFromVariableTypes(hashmap);
     }
 
+
     private void checkIfClause(IfClause ifClause) {
+        HashMap<String, ExpressionType> hashmap = new HashMap<>();
+        addScopeToVariableTypes(hashmap);
+
         if (ifClause.conditionalExpression.getExpressionType() != BOOL) {
             ifClause.setError("Conditional expression has to be a boolean");
         }
@@ -64,16 +80,22 @@ public class Checker {
                 }
         );
 
+        removeScopeFromVariableTypes(hashmap);
 
     }
 
     private void checkElseClause(ElseClause elseClause) {
+        HashMap<String, ExpressionType> hashmap = new HashMap<>();
+        addScopeToVariableTypes(hashmap);
+
         elseClause.body.forEach(child -> {
             if (child instanceof Declaration) {
                 checkDeclaration((Declaration) child);
             }
 
         });
+
+        removeScopeFromVariableTypes(hashmap);
     }
 
     private void checkDeclaration(Declaration declaration) {
@@ -113,9 +135,7 @@ public class Checker {
     }
 
     private void addVariableReferenceToList(String name, ExpressionType expressionType) {
-        HashMap<String, ExpressionType> variableWithType = new HashMap<>();
-        variableWithType.put(name, expressionType);
-        variableTypes.add(variableWithType);
+        variableTypes.getLast().put(name, expressionType);
     }
 
 

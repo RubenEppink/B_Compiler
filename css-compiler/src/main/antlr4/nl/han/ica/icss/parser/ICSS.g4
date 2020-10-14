@@ -46,7 +46,7 @@ ASSIGNMENT_OPERATOR: ':=';
 
 //--- PARSER: ---
 stylesheet: variableAssignment* styleRule* EOF;
-styleRule: selector OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE;
+styleRule: selector OPEN_BRACE (declaration | ifClause | variableAssignment)* CLOSE_BRACE;
 
 selector: tagSelector | idSelector | classSelector;
 tagSelector: LOWER_IDENT;
@@ -71,5 +71,5 @@ min: MIN;
 plus: PLUS;
 multiply: MUL;
 
-ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE elseClause*;
-elseClause: ELSE OPEN_BRACE declaration+ CLOSE_BRACE;
+ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE (declaration | ifClause | variableAssignment)* CLOSE_BRACE elseClause*;
+elseClause: ELSE OPEN_BRACE (declaration | variableAssignment)* CLOSE_BRACE;
