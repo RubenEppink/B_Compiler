@@ -1,9 +1,15 @@
 package nl.han.ica.icss.ast;
 
+import nl.han.ica.icss.ast.types.Checkers;
+import nl.han.ica.icss.ast.types.ExpressionType;
+import nl.han.ica.icss.checker.Checker;
 import nl.han.ica.icss.checker.SemanticError;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
+
+import static nl.han.ica.icss.checker.Checker.removeScopeFromVariableTypes;
 
 /**
  * A stylesheet is the root node of the AST, it consists of one or more statements
@@ -54,7 +60,16 @@ public class Stylesheet extends ASTNode {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(body);
+    }
+
+    @Override
+    public void check() {
+        HashMap<String, ExpressionType> hashmap = new HashMap<>();
+        Checker.addScopeToVariableTypes(hashmap);
+
+        getChildren().forEach(Checkers::check);
+
+        removeScopeFromVariableTypes(hashmap);
     }
 }

@@ -1,7 +1,14 @@
 package nl.han.ica.icss.ast;
 
+import nl.han.ica.icss.ast.types.Checkers;
+import nl.han.ica.icss.ast.types.ExpressionType;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
+
+import static nl.han.ica.icss.checker.Checker.addScopeToVariableTypes;
+import static nl.han.ica.icss.checker.Checker.removeScopeFromVariableTypes;
 
 public class Stylerule extends ASTNode {
 	
@@ -53,5 +60,15 @@ public class Stylerule extends ASTNode {
 	@Override
 	public int hashCode() {
 		return Objects.hash(selectors, body);
+	}
+
+	@Override
+	public void check() {
+		HashMap<String, ExpressionType> hashmap = new HashMap<>();
+		addScopeToVariableTypes(hashmap);
+
+		this.getChildren().forEach(Checkers::check);
+
+		removeScopeFromVariableTypes(hashmap);
 	}
 }

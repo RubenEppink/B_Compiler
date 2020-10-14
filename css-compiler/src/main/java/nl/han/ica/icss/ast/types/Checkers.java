@@ -30,12 +30,15 @@ public abstract class Checkers {
         return false;
     }
 
-
     /**
      *
      * @return Enum containing the expression type
      */
     public ExpressionType getExpressionType() {
         return ExpressionType.UNDEFINED;
+    }
+
+    public void check(){
+
     }
 }
