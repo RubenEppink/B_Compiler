@@ -71,24 +71,30 @@ public class VariableAssignment extends ASTNode {
         expressionError = false;
         expression.check();
 
-        addVariableReferenceToList(this.name.name, expression.getInstance(expression.getValue()));
+        //extra uitbreiding
+        if (this.name.getInstance(0) != null && this.name.getInstance(0).getExpressionType() != expression.getExpressionType()) {
+            setError("You can only declare a variable type once");
+        } else {
+            addVariableReferenceToList(this.name.name, expression.getInstance(expression.getValue()));
+        }
     }
 
-    private void addVariableReferenceToList(String name, Literal literal) {
-        variableTypes.getLast().put(name, literal);
+
+        private void addVariableReferenceToList (String name, Literal literal){
+            variableTypes.getLast().put(name, literal);
+        }
+
+        @Override
+        public void evaluate () {
+            Expression expression = this.expression;
+            Literal literal = expression.getInstance(expression.getValue());
+
+            addVariableValueToList(this.name.name, literal);
+            this.expression = literal;
+        }
+
+        private void addVariableValueToList (String name, Literal literal){
+            variableValues.getLast().put(name, literal);
+        }
+
     }
-
-    @Override
-    public void evaluate() {
-        Expression expression = this.expression;
-        Literal literal = expression.getInstance(expression.getValue());
-
-        addVariableValueToList(this.name.name, literal);
-        this.expression = literal;
-    }
-
-    private void addVariableValueToList(String name, Literal literal) {
-        variableValues.getLast().put(name, literal);
-    }
-
-}

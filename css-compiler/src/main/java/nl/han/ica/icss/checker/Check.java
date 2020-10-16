@@ -40,7 +40,12 @@ public abstract class Check extends Transformer {
         return ExpressionType.UNDEFINED;
     }
 
+    /**
+     * used for traversing the ast tree
+     */
     public void check(){
 
     }
+
+
 }
