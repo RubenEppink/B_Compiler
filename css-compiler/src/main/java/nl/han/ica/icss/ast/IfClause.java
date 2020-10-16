@@ -1,7 +1,9 @@
 package nl.han.ica.icss.ast;
 
-import nl.han.ica.icss.ast.types.Checkers;
+import nl.han.ica.icss.ast.literals.BoolLiteral;
+import nl.han.ica.icss.checker.Check;
 import nl.han.ica.icss.ast.types.ExpressionType;
+import nl.han.ica.icss.transforms.Transformer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,8 +103,34 @@ public class IfClause extends ASTNode {
             //return;
         }
 
-        this.getChildren().forEach(Checkers::check);
+        this.getChildren().forEach(Check::check);
 
         removeScopeFromVariableTypes(hashmap);
     }
+
+    @Override
+    public ArrayList<ASTNode> transform() {
+        ArrayList<ASTNode> astNodeArraylist = new ArrayList<>();
+
+        if (((BoolLiteral) conditionalExpression).value) {
+            body.forEach(child -> {
+                if (!child.isClause()) {
+                    astNodeArraylist.add(child);
+                }
+                astNodeArraylist.addAll(child.transform());
+            });
+
+        } else if (this.elseClause != null) {
+            return elseClause.transform();
+        }
+
+        return astNodeArraylist;
+    }
+
+    @Override
+    public boolean isClause() {
+        return true;
+    }
 }
+
+

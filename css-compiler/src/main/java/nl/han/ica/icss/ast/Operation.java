@@ -1,5 +1,8 @@
 package nl.han.ica.icss.ast;
 
+import nl.han.ica.icss.ast.literals.PercentageLiteral;
+import nl.han.ica.icss.ast.literals.PixelLiteral;
+import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import static nl.han.ica.icss.ast.types.ExpressionType.*;
@@ -13,6 +16,7 @@ public abstract class Operation extends Expression {
     public Expression rhs;
     public ExpressionType expressionType = UNDEFINED;
     public boolean isOperable = false;
+    public int value = 0;
 
 
     @Override
@@ -69,5 +73,11 @@ public abstract class Operation extends Expression {
             expressionError = true;
         }
     }
+
+    @Override
+    public int getValue() {
+        return this.value;
+    }
+
 }
 

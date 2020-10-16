@@ -15,6 +15,7 @@ public class MultiplyOperation extends Operation {
     @Override
     public boolean isValidOperation() {
         if (this.rhs.getExpressionType() == SCALAR || this.lhs.getExpressionType() == SCALAR) {
+            this.value = lhs.getValue() * rhs.getValue();
             this.isOperable = true;
             this.expressionType = determineExpressionType();
             return true;

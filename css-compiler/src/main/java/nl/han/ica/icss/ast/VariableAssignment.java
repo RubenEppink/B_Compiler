@@ -1,12 +1,18 @@
 package nl.han.ica.icss.ast;
 
+import nl.han.ica.icss.ast.literals.BoolLiteral;
+import nl.han.ica.icss.ast.literals.PercentageLiteral;
+import nl.han.ica.icss.ast.literals.PixelLiteral;
+import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.types.ExpressionType;
 import nl.han.ica.icss.checker.Checker;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static nl.han.ica.icss.ast.types.ExpressionType.*;
 import static nl.han.ica.icss.checker.Checker.*;
+import static nl.han.ica.icss.transforms.EvalExpressions.variableValues;
 
 /**
  * An assignment binds a expression to an identifier.
@@ -71,4 +77,18 @@ public class VariableAssignment extends ASTNode {
     private void addVariableReferenceToList(String name, ExpressionType expressionType) {
         variableTypes.getLast().put(name, expressionType);
     }
+
+    @Override
+    public void evaluate() {
+        Expression expression = this.expression;
+        Literal literal = expression.getInstance(expression.getValue());
+
+        addVariableValueToList(this.name.name, literal);
+        this.expression = literal;
+    }
+
+    private void addVariableValueToList(String name, Literal literal) {
+        variableValues.getLast().put(name, literal);
+    }
+
 }

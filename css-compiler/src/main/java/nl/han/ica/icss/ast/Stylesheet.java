@@ -1,15 +1,16 @@
 package nl.han.ica.icss.ast;
 
-import nl.han.ica.icss.ast.types.Checkers;
+import nl.han.ica.icss.checker.Check;
 import nl.han.ica.icss.ast.types.ExpressionType;
 import nl.han.ica.icss.checker.Checker;
-import nl.han.ica.icss.checker.SemanticError;
+import nl.han.ica.icss.transforms.Transformer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
 import static nl.han.ica.icss.checker.Checker.removeScopeFromVariableTypes;
+import static nl.han.ica.icss.transforms.EvalExpressions.variableValues;
 
 /**
  * A stylesheet is the root node of the AST, it consists of one or more statements
@@ -68,8 +69,24 @@ public class Stylesheet extends ASTNode {
         HashMap<String, ExpressionType> hashmap = new HashMap<>();
         Checker.addScopeToVariableTypes(hashmap);
 
-        getChildren().forEach(Checkers::check);
+        getChildren().forEach(Check::check);
 
         removeScopeFromVariableTypes(hashmap);
+    }
+
+    @Override
+    public ArrayList<ASTNode> transform() {
+        this.getChildren().forEach(Transformer::transform);
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void evaluate() {
+        HashMap<String, Literal> hashMap = new HashMap<>();
+        variableValues.add(hashMap);
+
+        body.forEach(Transformer::evaluate);
+
+        variableValues.removeLast();
     }
 }

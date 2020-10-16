@@ -1,8 +1,10 @@
-package nl.han.ica.icss.ast.types;
+package nl.han.ica.icss.checker;
 
 import nl.han.ica.icss.ast.ASTNode;
+import nl.han.ica.icss.ast.types.ExpressionType;
+import nl.han.ica.icss.transforms.Transformer;
 
-public abstract class Checkers {
+public abstract class Check extends Transformer {
 
     /**
      * Value than can be used in a multiply,

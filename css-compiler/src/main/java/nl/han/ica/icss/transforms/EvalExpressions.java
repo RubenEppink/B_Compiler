@@ -1,5 +1,6 @@
 package nl.han.ica.icss.transforms;
 
+import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.PercentageLiteral;
@@ -14,17 +15,14 @@ import java.util.LinkedList;
 
 public class EvalExpressions implements Transform {
 
-    private IHANLinkedList<HashMap<String, Literal>> variableValues;
+    public static LinkedList<HashMap<String, Literal>> variableValues;
 
     public EvalExpressions() {
-        //variableValues = new HANLinkedList<>();
+        variableValues = new LinkedList<>();
     }
 
     @Override
     public void apply(AST ast) {
-        //variableValues = new HANLinkedList<>();
-
+        ast.root.evaluate();
     }
-
-    
 }

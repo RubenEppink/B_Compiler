@@ -42,4 +42,14 @@ public class PercentageLiteral extends Literal {
     public ExpressionType getExpressionType() {
         return ExpressionType.PERCENTAGE;
     }
+
+    @Override
+    public int getValue() {
+        return this.value;
+    }
+
+    @Override
+    public Literal getInstance(int value) {
+        return new PercentageLiteral(value);
+    }
 }

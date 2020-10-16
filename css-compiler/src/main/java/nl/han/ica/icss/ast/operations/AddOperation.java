@@ -12,6 +12,7 @@ public class AddOperation extends Operation {
     @Override
     public boolean isValidOperation() {
         if (this.rhs.getExpressionType() == this.lhs.getExpressionType()) {
+            this.value = lhs.getValue() + rhs.getValue();
             this.isOperable = true;
             this.expressionType = rhs.getExpressionType();
             return true;

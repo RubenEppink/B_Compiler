@@ -1,13 +1,12 @@
 package nl.han.ica.icss.ast;
 
-import nl.han.ica.icss.ast.types.Checkers;
-import nl.han.ica.icss.checker.Checker;
+import nl.han.ica.icss.checker.Check;
 import nl.han.ica.icss.checker.SemanticError;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ASTNode extends Checkers {
+public class ASTNode extends Check {
 
     private SemanticError error = null;
 

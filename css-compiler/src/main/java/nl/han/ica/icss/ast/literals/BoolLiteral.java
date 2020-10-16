@@ -1,6 +1,5 @@
 package nl.han.ica.icss.ast.literals;
 
-import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.Literal;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
@@ -38,5 +37,10 @@ public class BoolLiteral extends Literal {
     @Override
     public ExpressionType getExpressionType() {
         return ExpressionType.BOOL;
+    }
+
+    @Override
+    public Literal getInstance(int value) {
+        return this;
     }
 }

@@ -45,4 +45,13 @@ public class PixelLiteral extends Literal {
         return true;
     }
 
+    @Override
+    public int getValue() {
+        return this.value;
+    }
+
+    @Override
+    public Literal getInstance(int value) {
+        return new PixelLiteral(value);
+    }
 }

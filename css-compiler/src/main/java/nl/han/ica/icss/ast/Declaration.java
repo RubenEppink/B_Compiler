@@ -76,15 +76,22 @@ public class Declaration extends ASTNode {
             case "color":
             case "background-color":
                 if (expressionType != COLOR) {
-                    this.setError(expressionType + " isn't compatible with the a color property");
+                    this.setError(expressionType + " isn't compatible with " + this.property.name);
                 }
                 break;
             case "width":
             case "height":
                 if (expressionType != PIXEL && expressionType != PERCENTAGE) {
-                    this.setError(expressionType + " isn't compatible with a size property");
+                    this.setError(expressionType + " isn't compatible with " + this.property.name);
                 }
                 break;
+            default:
+                this.setError(this.property.name + " is not a valid property");
         }
+    }
+
+    @Override
+    public void evaluate() {
+        expression = expression.getInstance(expression.getValue());
     }
 }
