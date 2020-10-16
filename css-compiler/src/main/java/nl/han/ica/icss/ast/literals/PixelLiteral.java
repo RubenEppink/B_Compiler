@@ -54,4 +54,9 @@ public class PixelLiteral extends Literal {
     public Literal getInstance(int value) {
         return new PixelLiteral(value);
     }
+
+    @Override
+    public String generate() {
+       return value + "px";
+    }
 }

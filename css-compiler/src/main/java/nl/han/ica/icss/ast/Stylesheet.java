@@ -66,7 +66,7 @@ public class Stylesheet extends ASTNode {
 
     @Override
     public void check() {
-        HashMap<String, ExpressionType> hashmap = new HashMap<>();
+        HashMap<String, Literal> hashmap = new HashMap<>();
         Checker.addScopeToVariableTypes(hashmap);
 
         getChildren().forEach(Check::check);
@@ -88,5 +88,16 @@ public class Stylesheet extends ASTNode {
         body.forEach(Transformer::evaluate);
 
         variableValues.removeLast();
+    }
+
+    @Override
+    public String generate() {
+        StringBuilder stringBuilder1 = new StringBuilder();
+
+        getChildren().forEach(child -> {
+            stringBuilder1.append(child.generate());
+        });
+
+        return stringBuilder1.toString();
     }
 }

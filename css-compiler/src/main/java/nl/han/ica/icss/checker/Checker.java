@@ -11,18 +11,18 @@ import java.util.*;
 public class Checker {
 
     public static boolean expressionError;
-    public static LinkedList<HashMap<String, ExpressionType>> variableTypes;
+    public static LinkedList<HashMap<String, Literal>> variableTypes;
 
     public void check(AST ast) {
         variableTypes = new LinkedList<>();
         ast.root.check();
     }
 
-    public static void removeScopeFromVariableTypes(HashMap<String, ExpressionType> hashmap) {
+    public static void removeScopeFromVariableTypes(HashMap<String, Literal> hashmap) {
         variableTypes.remove(hashmap);
     }
 
-    public static void addScopeToVariableTypes(HashMap<String, ExpressionType> hashmap) {
+    public static void addScopeToVariableTypes(HashMap<String, Literal> hashmap) {
         variableTypes.add(hashmap);
     }
 }

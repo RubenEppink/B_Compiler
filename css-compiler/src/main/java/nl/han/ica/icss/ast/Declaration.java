@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static nl.han.ica.icss.ast.types.ExpressionType.*;
+import static nl.han.ica.icss.checker.Checker.expressionError;
 
 /*
  * A Declaration defines a style property. Declarations are things like "width: 100px"
@@ -93,5 +94,14 @@ public class Declaration extends ASTNode {
     @Override
     public void evaluate() {
         expression = expression.getInstance(expression.getValue());
+    }
+
+    @Override
+    public String generate() {
+        return "  " +
+                this.property.name +
+                ": " +
+                this.expression.generate() +
+                "; \n";
     }
 }

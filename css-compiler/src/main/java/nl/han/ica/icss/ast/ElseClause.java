@@ -59,7 +59,7 @@ public class ElseClause extends ASTNode {
 
     @Override
     public void check() {
-        HashMap<String, ExpressionType> hashmap = new HashMap<>();
+        HashMap<String, Literal> hashmap = new HashMap<>();
         addScopeToVariableTypes(hashmap);
 
         this.body.forEach(Check::check);

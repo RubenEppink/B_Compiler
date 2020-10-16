@@ -65,16 +65,6 @@ public class ASTListener extends ICSSBaseListener {
     }
 
     @Override
-    public void enterSelector(ICSSParser.SelectorContext ctx) {
-
-    }
-
-    @Override
-    public void exitSelector(ICSSParser.SelectorContext ctx) {
-
-    }
-
-    @Override
     public void enterTagSelector(ICSSParser.TagSelectorContext ctx) {
         currentContainer.push(new TagSelector(ctx.getText()));
     }
@@ -108,14 +98,6 @@ public class ASTListener extends ICSSBaseListener {
     }
 
     @Override
-    public void enterValue(ICSSParser.ValueContext ctx) {
-    }
-
-    @Override
-    public void exitValue(ICSSParser.ValueContext ctx) {
-    }
-
-    @Override
     public void enterColorLiteral(ICSSParser.ColorLiteralContext ctx) {
         currentContainer.push(new ColorLiteral(ctx.getText()));
     }
@@ -123,7 +105,6 @@ public class ASTListener extends ICSSBaseListener {
     @Override
     public void exitColorLiteral(ICSSParser.ColorLiteralContext ctx) {
         ASTNode astNode = currentContainer.pop();
-        System.out.println(currentContainer.peek());
         currentContainer.peek().addChild(astNode);
     }
 
@@ -193,34 +174,6 @@ public class ASTListener extends ICSSBaseListener {
         currentContainer.peek().addChild(astNode);
     }
 
-    @Override
-    public void enterPlus(ICSSParser.PlusContext ctx) {
-
-    }
-
-    @Override
-    public void exitPlus(ICSSParser.PlusContext ctx) {
-
-    }
-
-    @Override
-    public void enterMin(ICSSParser.MinContext ctx) {
-    }
-
-    @Override
-    public void exitMin(ICSSParser.MinContext ctx) {
-
-    }
-
-    @Override
-    public void enterMultiply(ICSSParser.MultiplyContext ctx) {
-
-    }
-
-    @Override
-    public void exitMultiply(ICSSParser.MultiplyContext ctx) {
-
-    }
 
     @Override
     public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {

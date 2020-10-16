@@ -95,7 +95,7 @@ public class IfClause extends ASTNode {
 
     @Override
     public void check() {
-        HashMap<String, ExpressionType> hashmap = new HashMap<>();
+        HashMap<String, Literal> hashmap = new HashMap<>();
         addScopeToVariableTypes(hashmap);
 
         if (this.conditionalExpression.getExpressionType() != BOOL) {
@@ -130,6 +130,12 @@ public class IfClause extends ASTNode {
     @Override
     public boolean isClause() {
         return true;
+    }
+
+    @Override
+    public void evaluate() {
+        getChildren().forEach(Transformer::evaluate);
+        conditionalExpression = conditionalExpression.getInstance(0);
     }
 }
 

@@ -71,11 +71,11 @@ public class VariableAssignment extends ASTNode {
         expressionError = false;
         expression.check();
 
-        addVariableReferenceToList(this.name.name, expression.getExpressionType());
+        addVariableReferenceToList(this.name.name, expression.getInstance(expression.getValue()));
     }
 
-    private void addVariableReferenceToList(String name, ExpressionType expressionType) {
-        variableTypes.getLast().put(name, expressionType);
+    private void addVariableReferenceToList(String name, Literal literal) {
+        variableTypes.getLast().put(name, literal);
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+import static nl.han.ica.icss.checker.Checker.variableTypes;
 import static nl.han.ica.icss.transforms.EvalExpressions.variableValues;
 
 public class VariableReference extends Expression {
@@ -47,37 +48,36 @@ public class VariableReference extends Expression {
 
     @Override
     public ExpressionType getExpressionType() {
-        HashMap<String, ExpressionType> hashmap = new HashMap<>();
-
         try {
-            hashmap = Checker.variableTypes.getLast();
+            return variableTypes.getLast().containsKey(this.name) ?
+                    variableTypes.getLast().get(this.name).getExpressionType() : variableTypes.get(0).get(this.name).getExpressionType();
         } catch (NoSuchElementException e) {
-            HashMap<String, Literal> map = variableValues.getLast();
-            if (variableValues.size() == 1) {
-                return map.getOrDefault(name, new ScalarLiteral(0)).getExpressionType();
-            }
-            return map.containsKey(name) ? map.get(name).getExpressionType() : variableValues.get(0).getOrDefault(name, new ScalarLiteral(0)).getExpressionType();
+            return variableValues.getLast().containsKey(this.name) ?
+                    variableValues.getLast().get(this.name).getExpressionType() : variableValues.get(0).get(this.name).getExpressionType();
         }
-        //if variabletypes only has one element, then there's only a global scope
-        // or you're in the local scope.
-        //check if the variable is in that scope and return, else return undefined
-        if (Checker.variableTypes.size() == 1) {
-            return hashmap.getOrDefault(name, ExpressionType.UNDEFINED);
-        }
-
-        //else check the last scope (current scope we're in) and return if present, else check global scope (first element in the list)
-        //and return variable if present else return UNDEFINED
-        return hashmap.containsKey(name) ? hashmap.get(name) : Checker.variableTypes.get(0).getOrDefault(name, ExpressionType.UNDEFINED);
 
     }
 
     @Override
     public int getValue() {
-        return variableValues.getLast().getOrDefault(this.name, new ScalarLiteral(0)).getValue();
+        try {
+            return variableTypes.getLast().containsKey(this.name) ?
+                    variableTypes.getLast().get(this.name).getValue() : variableTypes.get(0).get(this.name).getValue();
+        } catch (NoSuchElementException e) {
+            return variableValues.getLast().containsKey(this.name) ?
+                    variableValues.getLast().get(this.name).getValue() : variableValues.get(0).get(this.name).getValue();
+        }
     }
 
     @Override
     public Literal getInstance(int value) {
-        return variableValues.getLast().getOrDefault(this.name, new ScalarLiteral(0));
+        try {
+            return variableTypes.getLast().containsKey(this.name) ?
+                    variableTypes.getLast().get(this.name) : variableTypes.get(0).get(this.name);
+        } catch (NoSuchElementException e) {
+            return variableValues.getLast().containsKey(this.name) ?
+                    variableValues.getLast().get(this.name) : variableValues.get(0).get(this.name);
+        }
     }
+
 }

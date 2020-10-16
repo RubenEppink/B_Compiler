@@ -43,4 +43,9 @@ public class BoolLiteral extends Literal {
     public Literal getInstance(int value) {
         return this;
     }
+
+    @Override
+    public String generate() {
+        return value + "";
+    }
 }

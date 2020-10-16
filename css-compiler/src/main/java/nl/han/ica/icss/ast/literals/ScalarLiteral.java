@@ -52,4 +52,9 @@ public class ScalarLiteral extends Literal {
     public Literal getInstance(int value) {
         return new ScalarLiteral(value);
     }
+
+    @Override
+    public String generate() {
+        return value + "";
+    }
 }

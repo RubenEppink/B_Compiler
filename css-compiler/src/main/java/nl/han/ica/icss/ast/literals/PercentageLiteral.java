@@ -52,4 +52,9 @@ public class PercentageLiteral extends Literal {
     public Literal getInstance(int value) {
         return new PercentageLiteral(value);
     }
+
+    @Override
+    public String generate() {
+         return value + "%";
+    }
 }

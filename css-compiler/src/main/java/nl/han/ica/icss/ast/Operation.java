@@ -69,7 +69,9 @@ public abstract class Operation extends Expression {
             this.setError("You can't use Color or Boolean in an expression");
             expressionError = true;
         } else if (!this.isValidOperation()) {
-            this.setError(this.lhs.getExpressionType() + " and " + this.rhs.getExpressionType() + " aren't allowed with this operator");
+            this.setError(this.lhs.getExpressionType() +
+                    " and " + this.rhs.getExpressionType() +
+                    " aren't allowed with " + this.getNodeLabel() +  " operator");
             expressionError = true;
         }
     }
